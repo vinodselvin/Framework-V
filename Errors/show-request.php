@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Error 401: Un-Authorized Access</title>
+        <title>Error 405: Method Not Allowed</title>
         <style>
             .error-div{
                 margin: auto;
@@ -12,10 +12,12 @@
     <body>
         <div class="error-div">
             <h1>Oops! :(</h1>
-            <p><b>401</b>, Error Occurred</p>
+            <p><b>405</b>, Error Occurred</p>
             <span>
-                The URL you requested <b><?php echo $_SERVER['REQUEST_URI'] ?></b>, has disabled access to you.
+                The URL <b><?php echo $_SERVER['REQUEST_URI'] ?></b>, cannot be accessed via <b><?php echo $_SERVER['REQUEST_METHOD']?></b> Method.
             </span>
         </div>
     </body>
 </html>
+<?php
+header("HTTP/1.1 405 Method Not Allowd", true, 405);

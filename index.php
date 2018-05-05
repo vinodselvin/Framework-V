@@ -8,6 +8,6 @@ $ROOT['BASE_URL'] = '';
 //Root of system file
 include("System/FrameworkV.php");
 
-//Initialize Framwork
+//Initialize Framework-V
 new FrameworkV();
 

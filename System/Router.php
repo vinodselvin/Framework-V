@@ -28,17 +28,16 @@ Class Router extends FrameworkV{
     function setRequestDetails(){
         
         $request_uri = $this->server['REQUEST_URI'];
-    
-        $request_uri_segments = explode("/",$request_uri);
-
-        if($request_uri_segments[2] != "index.php"){
-            $request_uri_segments[2] = "index.php";
-        }
         
-        //Unsetted for reason
+        $request_url = explode("?", $request_uri);
+        
+        $request_uri_segments = explode("/", trim($request_url[0], '/'));
+        
         unset($request_uri_segments[0]);
-        unset($request_uri_segments[1]);
-        unset($request_uri_segments[2]);
+        
+        if(isset($request_uri_segments[1]) && $request_uri_segments[1] == 'index.php'){
+            unset($request_uri_segments[1]);
+        }
         
         $this->request['uri_segments'] = $request_uri_segments;
         $this->request['request_headers'] = getallheaders();
@@ -52,19 +51,15 @@ Class Router extends FrameworkV{
         
         foreach ($this->defined_routers as $key => $eroute){
             
-            if ($this->checkUrlMatchesWithRouter(explode("/",$key))) {
-                
-                $url = explode("/", $eroute['url']);
-                
-                $this->request['controller'] = $url[0];
-                $this->request['method'] = $url[1];
-                
-                $class_path = "App/Controllers/". $this->request['controller'].".php";
-                
-                if(file_exists($class_path)){
-                    $this->request['class_path'] = $class_path;
-                    return;
-                }
+            $isRouterPresent = $this->checkUrlMatchesWithRouter(explode("/",$key));
+            
+            if($isRouterPresent == "yes") {
+                $this->setMethod($eroute);
+                return true;
+            }
+            else if($isRouterPresent == "default"){
+                $this->setMethod($this->defined_routers['default_route']);
+                return true;
             }
         }
         
@@ -73,11 +68,31 @@ Class Router extends FrameworkV{
     
     function checkUrlMatchesWithRouter($url){
         
-        if(strpos(implode("/",$this->request['uri_segments']), implode("/", $url)) !== false){
-            return true;
+        if(empty($this->request['uri_segments'])){
+            return "default";
+        }
+        else if(implode("/",$this->request['uri_segments']) == implode("/", $url)){
+            return "yes";
         }
         
-        return false;
+        return "no";
+    }
+    
+    function setMethod($route){
+        
+        $url = explode("/", $route['url']);
+
+        $this->request['controller'] = $url[0];
+        $this->request['method'] = $url[1];
+        $this->request['request_method_allowed'] = $route['method'];
+        $this->request['request_method'] = strtolower($this->server['REQUEST_METHOD']);
+        
+        $class_path = "App/Controllers/". $this->request['controller'].".php";
+
+        if(file_exists($class_path)){
+            $this->request['class_path'] = $class_path;
+            return;
+        }
     }
     
 }

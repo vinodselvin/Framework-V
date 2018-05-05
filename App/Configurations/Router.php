@@ -1,4 +1,4 @@
 <?php
 
-$ROUTER['default_route'] = ['Hello/main', ['get','post']];
+$ROUTER['default_route'] = ['Welcome/main', ['get']];
 $ROUTER['hello'] = ['Hello/main', ['get','post']];
