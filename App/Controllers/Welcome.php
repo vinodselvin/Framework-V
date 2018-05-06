@@ -1,20 +1,14 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of Welcome
- *
- * @author selvin
- */
-class Welcome {
-    //put your code here
+class Welcome extends FV_Controller{
     
     function main(){
-        echo "Welcome to Framework-V";
+        
+//        $this->load->controller('Hello');
+        $this->load->model('Welcome_model');
+        
+//        print_r($this->Hello->main());    
+        print_r($this->Welcome_model->test());
+        
     }
 }

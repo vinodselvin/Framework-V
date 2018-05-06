@@ -1,5 +1,7 @@
 <?php
 
+include("System/Core/FV_Controller.php");
+include("System/Core/FV_Model.php");
 include("System/Router.php");
 
 Class FrameworkV{
