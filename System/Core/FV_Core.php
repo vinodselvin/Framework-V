@@ -58,4 +58,40 @@ class FV_Core{
         
         return $MAIN;
     }
+    
+    public function template($view_path, $data = false, $store_to_variable = false){
+        
+        if(!empty($view_path)){
+
+            $file_path = $this->main['APP_VIEWS_DIR'] . $view_path . '.php';
+            
+            if(file_exists($file_path)){
+                
+                if(!empty($data)){
+                    
+                    $data = (array) $data;
+                    
+                    extract($data);
+                }
+                
+                if($store_to_variable){
+                    return $this->loadToVariable($file_path, $data);
+                }
+                else{
+                    require($file_path);
+                }
+            }
+        }
+    }
+    
+    protected function loadToVariable($file_path, $data){
+        
+        ob_start();
+        
+        extract($data);
+        
+        require($file_path);
+        
+        return ob_get_clean();
+    }
 }
